@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- useGeneratedKeys="true" keyProperty="userId" << 방법 지금실행하고 있는 insert으로 생기는 userId를 가져올 수 있다 -->
+<mapper namespace="green.greengramver1.user.UserMapper">
+    <insert id="insUser" useGeneratedKeys="true" keyProperty="userId"> <!--pk가 만들어지면 담을 공간-->
+
+        INSERT INTO user
+        SET uid = #{uid}
+          , upw = #{upw}
+          , nick_name = #{nickName}
+          , pic = #{pic}
+    </insert>
+
+    <select id="selUserForSignIn">
+        select user_id AS userId
+        , nick_Name, pic, upw
+          from user
+         where uid = #{uid}
+    </select>
+</mapper>

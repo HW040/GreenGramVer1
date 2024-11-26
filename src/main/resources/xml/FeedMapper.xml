@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- useGeneratedKeys="true" keyProperty="userId" << 방법 지금실행하고 있는 insert으로 생기는 userId를 가져올 수 있다 -->
+<mapper namespace="green.greengramver1.feed.FeedMapper">
+
+    <insert id="insFeed" useGeneratedKeys="true" keyProperty="feedId">
+        insert into feed
+        <!--        set writer_user_id =#{writerUserId}-->
+        <!--        , contents =#{contents}-->
+        <!--        , location =#{location}-->
+        (writer_user_id, contents, location)
+        values
+        (#{writerUserId}, #{contents}, #{location})
+
+    </insert>
+    <!--
+        (사진은 무시하세요), feed_pice테이블은 무시
+
+        feed_id 작성자userid값,작성자닉네임,작성자uid,작성자프로필사진파일명, contents, location, created_at값을
+        정렬은 최신글이 가장 위에 오도록
+        가져오는 쿼리문 작성
+    -->
+    <select id="selFeedList">
+        SELECT
+        A.feed_id AS feedId, A.contents, A.location, A.created_at AS createdAt
+        , B.user_id AS writerId
+        , if(B.nick_name IS NULL, B.uid, B.nick_name) AS writerNm
+        , B.pic AS writerPic
+        FROM feed A
+        INNER JOIN user B
+        ON A.writer_user_id = B.user_id
+        ORDER BY A.feed_id DESC
+        LIMIT #{startIdx},#{size}
+    </select>
+
+
+    <insert id="insFeedPic">
+        insert into feed_pic
+        set feed_id =#{feedId}
+        , pic =#{pic}
+    </insert>
+
+    <select id="selFeedPicList">
+        select pic
+        from feed_pics
+        where feed_id = #{feedId}
+    </select>
+
+
+</mapper>
